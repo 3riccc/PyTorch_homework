@@ -9,7 +9,7 @@ from numpy import *
 
 # 实现余弦相似度计算
 # 传入向量的形式应是1*n numpy array
-def euclid_dis(vector1,vector2):
+def cos_similarity(vector1,vector2):
 	vector1 = vector1.reshape((1,-1))
 	vector2 = vector2.reshape((1,-1))
 	fenmu = sqrt((vector1 * vector1).sum()) * sqrt((vector2 * vector2).sum())
@@ -28,7 +28,7 @@ def most_similar(word_vector,positive=[],negative=[]):
 	positive_dis = word_vector[positive[0]] - word_vector[positive[1]]
 	start_point = word_vector[negative[0]]
 	for i,word in enumerate(word_vector):
-		cos_dis = euclid_dis((start_point - word_vector[word]),positive_dis)
+		cos_dis = cos_similarity((start_point - word_vector[word]),positive_dis)
 		if cos_dis < min_len:
 			min_len = cos_dis
 			word_wanted = word
