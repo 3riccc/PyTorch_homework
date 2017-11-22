@@ -2,3 +2,6 @@
 *.pdf
 *.zip
 *.bin
+model_en
+model_zh
+*.npy
