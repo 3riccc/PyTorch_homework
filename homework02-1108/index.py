@@ -98,7 +98,6 @@ class LSTMNetwork(nn.Module):
 	def forward(self, input, hidden=None):
 		#首先根据输入input，进行词向量嵌入
 		embedded = self.embedding(input)
-
 		# 这里需要注意！
 		# PyTorch设计的LSTM层有一个特别别扭的地方是，输入张量的第一个维度需要是时间步，
 		# 第二个维度才是batch_size，所以需要对embedded变形
@@ -106,6 +105,7 @@ class LSTMNetwork(nn.Module):
 		# 变形的维度应该是（input_list_size, batch_size, hidden_size）
 		embedded = embedded.view(input.data.size()[0],1,self.hidden_size)
 
+		# print(embedded)
 		# 调用PyTorch自带的LSTM层函数，注意有两个输入，一个是输入层的输入，另一个是隐含层自身的输入
 		# 输出output是所有步的隐含神经元的输出结果，hidden是隐含层在最后一个时间步的状态。
 		# 注意hidden是一个tuple，包含了最后时间步的隐含层神经元的输出，以及每一个隐含层神经元的cell的状态
@@ -162,7 +162,7 @@ start = time.time()
 all_line_num = 0
 for key in category_lines:
     all_line_num += len(category_lines[key])
-print(all_line_num)
+
 
 
 def category_from_output(output):
@@ -179,13 +179,16 @@ def category_from_output(output):
 
 
 # 开始训练，一共5个epoch，否则容易过拟合
-for epoch in range(5):
+for epoch in range(1):
     losses = []
     #每次随机选择数据进行训练，每个 EPOCH 训练“所有名字个数”次。
-    for i in range(all_line_num):
+    for i in range(1):
         category, line, y, x = random_training_pair()
         x = Variable(torch.LongTensor(x))
+        # print(x)
         y = Variable(torch.LongTensor(np.array([y])))
+        print("y")
+        print(y)
         optimizer.zero_grad()
         
         # Step1:初始化LSTM隐含层单元的状态
@@ -194,7 +197,8 @@ for epoch in range(5):
         # Step2:让LSTM开始做运算，注意，不需要手工编写对时间步的循环，而是直接交给PyTorch的LSTM层。
         # 它自动会根据数据的维度计算若干时间步
         output = lstm(x,hidden)
-        
+        print("output")
+        print(output)
         # Step3:计算损失
         loss = cost(output,y)
         
